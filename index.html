@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0d0b;
+      --surface: #161410;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --cream: #f0e8d5;
+      --muted: #7a7060;
+      --border: rgba(201,168,76,0.2);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.5;
+    }
+
+    /* Background subtle radial glow */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(201,168,76,0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      max-width: 400px;
+      width: 100%;
+      animation: fadeUp 1s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Photo Frame ── */
+    .photo-wrapper {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      animation: fadeUp 1s 0.1s ease both;
+    }
+
+    /* Rotating dashed ring */
+    .photo-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 1.5px dashed var(--gold);
+      animation: spin 12s linear infinite;
+      opacity: 0.6;
+    }
+
+    /* Static solid ring */
+    .photo-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Corner ornaments */
+    .photo-wrapper .orns {
+      position: absolute;
+      inset: -20px;
+      pointer-events: none;
+    }
+    .photo-wrapper .orns span {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-color: var(--gold);
+      border-style: solid;
+      opacity: 0.8;
+    }
+    .photo-wrapper .orns span:nth-child(1) { top: 0; left: 0;  border-width: 2px 0 0 2px; }
+    .photo-wrapper .orns span:nth-child(2) { top: 0; right: 0; border-width: 2px 2px 0 0; }
+    .photo-wrapper .orns span:nth-child(3) { bottom: 0; left: 0;  border-width: 0 0 2px 2px; }
+    .photo-wrapper .orns span:nth-child(4) { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+    /* Diamond gems on ring */
+    .gems {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .gems::before, .gems::after {
+      content: '';
+      position: absolute;
+      width: 6px; height: 6px;
+      background: var(--gold-light);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--gold);
+    }
+    .gems::before { top: -3px; left: 50%; transform: translateX(-50%); }
+    .gems::after  { bottom: -3px; left: 50%; transform: translateX(-50%); }
+
+    .photo {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 0 2px var(--bg), 0 0 30px rgba(201,168,76,0.3), inset 0 0 20px rgba(0,0,0,0.5);
+      background: var(--surface);
+      /* Placeholder gradient if no image */
+      background-image: linear-gradient(135deg, #2a2418 0%, #1a1610 50%, #2a2418 100%);
+    }
+
+    /* Initials placeholder */
+    .photo-placeholder {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 0 2px var(--bg), 0 0 30px rgba(201,168,76,0.3);
+      background: linear-gradient(135deg, #2a2418 0%, #1a1610 50%, #2a2418 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--gold-light);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 20px rgba(201,168,76,0.4);
+    }
+
+    /* ── Name & Title ── */
+    .name {
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-align: center;
+      color: var(--cream);
+      line-height: 1;
+      animation: fadeUp 1s 0.2s ease both;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      width: 100%;
+      animation: fadeUp 1s 0.3s ease both;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .divider::after {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+    .divider-diamond {
+      width: 5px; height: 5px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .hobby {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-align: center;
+      animation: fadeUp 1s 0.4s ease both;
+    }
+
+    .bio {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+      max-width: 300px;
+      animation: fadeUp 1s 0.45s ease both;
+    }
+
+    /* ── Social Links ── */
+    .socials {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      animation: fadeUp 1s 0.5s ease both;
+    }
+
+    .social-link {
+      position: relative;
+      width: 42px; height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    .social-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(201,168,76,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .social-link:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+      box-shadow: 0 0 16px rgba(201,168,76,0.25);
+      transform: translateY(-2px);
+    }
+    .social-link:hover::before { opacity: 1; }
+
+    .social-link svg {
+      width: 16px; height: 16px;
+      fill: currentColor;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Footer ── */
+    .footer-line {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: rgba(122,112,96,0.4);
+      text-transform: uppercase;
+      animation: fadeUp 1s 0.6s ease both;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .photo-wrapper, .photo, .photo-placeholder { width: 150px; height: 150px; }
+      .name { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="card">
+
+    <!-- Photo Frame -->
+    <div class="photo-wrapper">
+      <div class="orns">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div class="gems"></div>
+      <!-- Replace with <img class="photo" src="your-photo.jpg" alt="Your Name"> -->
+      <div class="photo-placeholder">AJ</div>
+    </div>
+
+    <!-- Name -->
+    <h1 class="name">Alex Jordan</h1>
+
+    <div class="divider"><div class="divider-diamond"></div></div>
+
+    <!-- Hobbies / Role -->
+    <p class="hobby">Photographer &nbsp;·&nbsp; Traveler &nbsp;·&nbsp; Dreamer</p>
+
+    <!-- Short bio -->
+    <p class="bio">Capturing light, chasing horizons,<br>and building things that matter.</p>
+
+    <div class="divider"><div class="divider-diamond"></div></div>
+
+    <!-- Social Links -->
+    <nav class="socials" aria-label="Social links">
+
+      <!-- GitHub -->
+      <a class="social-link" href="https://github.com" target="_blank" rel="noopener" title="GitHub">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.207 11.387.6.11.793-.26.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.757-1.333-1.757-1.09-.745.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.305.76-1.605-2.665-.3-5.467-1.332-5.467-5.93 0-1.31.468-2.382 1.236-3.222-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.3 1.23A11.5 11.5 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.873.12 3.176.77.84 1.235 1.912 1.235 3.222 0 4.61-2.807 5.625-5.48 5.922.43.372.823 1.102.823 2.222v3.293c0 .32.192.694.8.576C20.565 21.796 24 17.298 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </a>
+
+      <!-- Twitter / X -->
+      <a class="social-link" href="https://twitter.com" target="_blank" rel="noopener" title="Twitter">
+        <svg viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+
+      <!-- Instagram -->
+      <a class="social-link" href="https://instagram.com" target="_blank" rel="noopener" title="Instagram">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+        </svg>
+      </a>
+
+      <!-- LinkedIn -->
+      <a class="social-link" href="https://linkedin.com" target="_blank" rel="noopener" title="LinkedIn">
+        <svg viewBox="0 0 24 24">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+
+      <!-- Email -->
+      <a class="social-link" href="mailto:hello@alexjordan.me" title="Email">
+        <svg viewBox="0 0 24 24">
+          <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
+        </svg>
+      </a>
+    </nav>
+
+    <span class="footer-line">available for projects &nbsp;·&nbsp; 2025</span>
+  </div>
+</main>
+</body>
+</html>
